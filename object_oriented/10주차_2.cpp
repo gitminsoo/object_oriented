@@ -319,3 +319,129 @@ int main() {
 
 	return 0;
 }
+
+// dynamic cast 문제 있는 코드
+// static으로 해주면 되는 듯
+
+#if 0
+
+//#include <iostream>
+//
+//using namespace std;
+//
+//class Parent {
+//public:
+//	int x;
+//	virtual void showme() {
+//		// 이 함수를 막으면 
+//		// 다이나믹 캐스트에 오류남
+//	}
+//};
+//
+//class Child : public Parent {
+//public:
+//	int y;
+//};
+//
+//int main() {
+//	// upcasting : 부모클래스 타입의 포인터로
+//	// 자식 클래스의 객체를 가리키는 일
+//	// 
+//	// 합법임 굉장히 많이 씀
+//	// 
+//	// 부모 클래스면 부모 클래스의 멤버만 사용해야 한다.
+//	// 부모 포인터로 자식 멤버를 건들 수 없음 <--  컴파일 에러
+//	//
+//	/*Parent* p = new Child();
+//	p->x = 10;*/
+//	//p->y = 10;
+//	// parent 의 공간에 y 가 없어서 에러가 남
+//
+//
+//	//Child* c = new Parent();
+//	// 안되게 막아 놓은 이유
+//	// 타입이 다르기 때문에
+//	// 더 많이 가진 정보로 부모에 접근하면
+//	// 빵꾸나는 경우가 있어서 
+//	// 에러가 남 
+//	// 문법적으로 오류를 잡아줌 
+//	//
+//
+//	// down casting
+//
+//	Parent* p = new Parent();
+//	// Child* c = (Child*)p;
+//	// 원래는 안되지만
+//	// 타입 캐스팅을 통해 컴파일에 문제가 없도록 함
+//	// 하지만 y에 대한 공간은 없고
+//	// 접근은 가능한 상태가 됨
+//	//
+//	/*c->x = 50;
+//	c->y = 999;*/
+//	// 컴파일러도 못잡아내고
+//	// 문제가 없다고 생각할 수 있지만
+//	// 남의 영역에 갖다가 넣는거기 때문에 위험함
+//	// down casting의 문제점 
+//	//
+//
+//
+//	// p.487
+//	Child* c = dynamic_cast<Child*>(p);
+//	/*Child* c = (Child*)p;*/
+//	// 다운 캐스팅 -> 문제 있음
+//	// 코당에서 거의 안씀 업캐스팅만 자주 씀
+//
+//
+//	c->x = 50;
+//	c->y = 999;
+//
+//	return 0;
+//
+//}
+
+#include <iostream>
+
+using namespace std;
+
+class Parent {
+public:
+	int x;
+
+	virtual void showme() {
+
+	}
+};
+
+class Child : public Parent {
+public:
+	int y;
+
+};
+
+int main(void) {
+
+	Parent* p = new Parent();
+	// Child* c = (Child*)p;
+	// 이것은 y에 대한 공간이 잡혀있지 않는데, 
+	// 값을 쓸 수는 있지만 다른 영역을 침범하는 것이므로 매우 위험하다.
+	// 이를 막기 위해서 dynamic_cast를 이용한다.
+	// delete c;
+	// delete p;
+
+	Child* c = dynamic_cast<Child*>(p);
+	Child* c2 = static_cast<Child*>(p);
+
+	c2->x = 50;
+	c2->y = 10;
+
+	cout << c2->x << endl;
+
+	cout << c2->y << endl;
+
+	//c->x = 50;
+	// c->y = 999;
+
+	return 0;
+}
+
+#endif // 0
